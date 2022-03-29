@@ -1,9 +1,9 @@
 package bootstrap
 
 import (
-	"github.com/Infinitive/predictive-go/pkg/database"
-	"github.com/Infinitive/predictive-go/pkg/env"
-	"github.com/Infinitive/predictive-go/pkg/router"
+	"github.com/Infintive/predictive-go/pkg/database"
+	"github.com/Infintive/predictive-go/pkg/env"
+	"github.com/Infintive/predictive-go/pkg/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"

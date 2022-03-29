@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/kooroshh/fiber-boostrap/bootstrap"
-	"github.com/kooroshh/fiber-boostrap/pkg/env"
 	"log"
+
+	"github.com/Infintive/predictive-go/bootstrap"
+	"github.com/Infintive/predictive-go/pkg/env"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/kooroshh/fiber-boostrap
+module github.com/Infintive/predictive-go
 
 go 1.17
 

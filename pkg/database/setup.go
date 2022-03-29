@@ -3,8 +3,8 @@ package database
 import (
 	"fmt"
 
-	"github.com/kooroshh/fiber-boostrap/app/models"
-	"github.com/kooroshh/fiber-boostrap/pkg/env"
+	"github.com/Infintive/predictive-go/app/models"
+	"github.com/Infintive/predictive-go/pkg/env"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
