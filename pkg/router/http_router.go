@@ -14,6 +14,11 @@ func (h HttpRouter) InstallRouter(app *fiber.App) {
 	group := app.Group("", cors.New(), csrf.New())
 
 	group.Get("/", controllers.RenderHello)
+
+	group.Get("/name", controllers.RenderName)
+
+	group.Post("/upload", controllers.UploadFile)
+
 }
 
 func NewHttpRouter() *HttpRouter {

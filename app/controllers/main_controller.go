@@ -1,7 +1,8 @@
 package controllers
 
 import (
-	"context"
+	"bufio"
+	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,10 +14,17 @@ func RenderHello(c *fiber.Ctx) error {
 	})
 }
 
-func UploadFile(c *fiber.Ctx) error {
-	ctx := context.Background()
-	file, err := c.FormFile("fileUpload")
+func RenderName(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"error": false,
+		"msg":   nil,
+		"info":  "Rajesh Patil",
+	})
+}
 
+func UploadFile(c *fiber.Ctx) error {
+	// Get first file from form field "document":
+	file, err := c.FormFile("document")
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
@@ -35,28 +43,19 @@ func UploadFile(c *fiber.Ctx) error {
 	}
 	defer buffer.Close()
 
-	// Create minio connection.
-
-	objectName := file.Filename
-	fileBuffer := buffer
-	contentType := file.Header["Content-Type"][0]
-	fileSize := file.Size
-
-	// Upload the zip file with PutObject
-	info, err := minioClient.PutObject(ctx, bucketName, objectName, fileBuffer, fileSize, minio.PutObjectOptions{ContentType: contentType})
-
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
-		})
+	scanner := bufio.NewScanner(buffer)
+	// optionally, resize scanner's capacity for lines over 64K, see next example
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
 	}
 
-	log.Printf("Successfully uploaded %s of size %d\n", objectName, info.Size)
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
 
 	return c.JSON(fiber.Map{
 		"error": false,
 		"msg":   nil,
-		"info":  info,
+		"info":  file.Filename,
 	})
 }
