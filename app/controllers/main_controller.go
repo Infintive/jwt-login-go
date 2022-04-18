@@ -1,61 +1,19 @@
 package controllers
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-
-	"github.com/gofiber/fiber/v2"
+	"net/http"
 )
 
-func RenderHello(c *fiber.Ctx) error {
-	return c.Render("index", fiber.Map{
-		"FiberTitle": "Hello From Fiber Html Engine",
-	})
+// Base route to access the API Documentation.
+func BaseHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello, Gophers!")
 }
 
-func RenderName(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{
-		"error": false,
-		"msg":   nil,
-		"info":  "Rajesh Patil",
-	})
+func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello, register!")
 }
 
-func UploadFile(c *fiber.Ctx) error {
-	// Get first file from form field "document":
-	file, err := c.FormFile("document")
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
-		})
-	}
-
-	// Get Buffer from file
-	buffer, err := file.Open()
-
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
-		})
-	}
-	defer buffer.Close()
-
-	scanner := bufio.NewScanner(buffer)
-	// optionally, resize scanner's capacity for lines over 64K, see next example
-	for scanner.Scan() {
-		fmt.Println(scanner.Text())
-	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	return c.JSON(fiber.Map{
-		"error": false,
-		"msg":   nil,
-		"info":  file.Filename,
-	})
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello, Login!")
 }

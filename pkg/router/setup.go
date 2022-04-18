@@ -1,14 +1,18 @@
 package router
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/Infintive/predictive-go/app/controllers"
+	"github.com/gorilla/mux"
 )
 
-func InstallRouter(app *fiber.App) {
-	setup(app, NewApiRouter(), NewHttpRouter())
-}
-func setup(app *fiber.App, router ...Router) {
-	for _, r := range router {
-		r.InstallRouter(app)
-	}
+//var UserRouter *mux.Router
+
+func SetupRouter() *mux.Router {
+	UserRouter := mux.NewRouter()
+	UserRouter.StrictSlash(true)
+	UserRouter.HandleFunc("/", controllers.BaseHandler)
+	UserRouter.HandleFunc("/register", controllers.RegisterHandler)
+	UserRouter.HandleFunc("/login", controllers.LoginHandler)
+
+	return UserRouter
 }

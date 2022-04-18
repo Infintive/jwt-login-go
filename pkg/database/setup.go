@@ -2,12 +2,15 @@ package database
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/Infintive/predictive-go/app/models"
 	"github.com/Infintive/predictive-go/pkg/env"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
+
+var DB *gorm.DB
 
 func SetupDatabase() {
 	var err error
@@ -22,5 +25,6 @@ func SetupDatabase() {
 	if err != nil {
 		panic(err)
 	}
+	log.Println("Successfully connected to database")
 	DB.AutoMigrate(&models.User{})
 }
