@@ -20,6 +20,18 @@ func BaseHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Hello, Gophers!")
 }
 
+func writeResponse(w http.ResponseWriter, message string, respCode int) {
+	w.WriteHeader(respCode)
+	w.Header().Set("Content-Type", "application/json")
+	resp := make(map[string]string)
+	resp["message"] = message
+	jsonResp, err := json.Marshal(resp)
+	if err != nil {
+		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+	}
+	w.Write(jsonResp)
+}
+
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	// Declare a new User struct.
 	var u models.User
@@ -55,28 +67,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	user := database.GetUserByEmail(data["email"])
 
 	if user == nil {
-		w.WriteHeader(http.StatusNotFound)
-		w.Header().Set("Content-Type", "application/json")
-		resp := make(map[string]string)
-		resp["message"] = "User not found in DB"
-		jsonResp, err := json.Marshal(resp)
-		if err != nil {
-			log.Fatalf("Error happened in JSON marshal. Err: %s", err)
-		}
-		w.Write(jsonResp)
+		// write the error message back to response
+		writeResponse(w, "User not found in DB", http.StatusNotFound)
 		return
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data["password"])); err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		w.Header().Set("Content-Type", "application/json")
-		resp := make(map[string]string)
-		resp["message"] = "Incorrect password for the user"
-		jsonResp, err := json.Marshal(resp)
-		if err != nil {
-			log.Fatalf("Error happened in JSON marshal. Err: %s", err)
-		}
-		w.Write(jsonResp)
+		// write the error message back to response
+		writeResponse(w, "Incorrect password for the user", http.StatusNotFound)
 		return
 	}
 
@@ -88,15 +86,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	token, err := claims.SignedString([]byte(SecretKey))
 
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		w.Header().Set("Content-Type", "application/json")
-		resp := make(map[string]string)
-		resp["message"] = "Incorrect username or password combination"
-		jsonResp, err := json.Marshal(resp)
-		if err != nil {
-			log.Fatalf("Error happened in JSON marshal. Err: %s", err)
-		}
-		w.Write(jsonResp)
+		// write the error message back to response
+		writeResponse(w, "Incorrect username or password combination", http.StatusNotFound)
 		return
 	}
 	// login success return the token on the output writer
@@ -110,5 +101,4 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
 	}
 	w.Write(jsonResp)
-	return
 }
